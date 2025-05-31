@@ -3,7 +3,7 @@ import { headers } from "next/headers"
 import { redirect } from "next/navigation"
 import cookie from "cookie"
 import { verifyToken } from "@/lib/auth"
-import { getLatestLog } from "@/lib/actions"
+import { getLatestLog, getTodayShift } from "@/lib/actions"
 import DashboardClient from "@/components/DashboardClient"
 
 export default async function DashboardPage() {
@@ -14,12 +14,16 @@ export default async function DashboardPage() {
 
   const user = token ? verifyToken(token) : null
 
-  // ✅ Thêm dòng debug
-  console.log("👉 User sau khi verify:", user)
-
   if (!user) redirect("/login")
 
   const latestLog = await getLatestLog(user.id)
+  const shift = await getTodayShift(user.id)
 
-  return <DashboardClient user={user} latestLog={latestLog} />
+  return (
+    <DashboardClient
+      user={user}
+      latestLog={latestLog}
+      shift={shift}
+    />
+  )
 }

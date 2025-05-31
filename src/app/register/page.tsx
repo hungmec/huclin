@@ -1,11 +1,6 @@
-// ✅ /app/register/page.tsx
-import { redirect } from "next/navigation"
-import { getCurrentUser } from "@/lib/check-auth"
-import AuthForm from "@/components/AuthForm"
-
-export default async function RegisterPage() {
-  const user = getCurrentUser()
-  if (await user) redirect("/dashboard")
-
-  return <AuthForm type="register" />
-}
+const { data: shift } = await supabaseAdmin
+  .from("shifts")
+  .select("role, shift_type, start_time, end_time")
+  .eq("user_id", user_id)
+  .eq("date", today)
+  .maybeSingle()

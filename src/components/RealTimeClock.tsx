@@ -3,16 +3,21 @@
 import { useEffect, useState } from "react"
 
 export function RealTimeClock() {
-  const [time, setTime] = useState(new Date())
+  const [time, setTime] = useState<string>("--:--:--")
 
   useEffect(() => {
-    const interval = setInterval(() => setTime(new Date()), 1000)
+    const update = () => {
+      const now = new Date()
+      const h = now.getHours().toString().padStart(2, "0")
+      const m = now.getMinutes().toString().padStart(2, "0")
+      const s = now.getSeconds().toString().padStart(2, "0")
+      setTime(`${h}:${m}:${s}`)
+    }
+
+    update()
+    const interval = setInterval(update, 1000)
     return () => clearInterval(interval)
   }, [])
 
-  return (
-    <p className="text-2xl font-mono">
-      {time.toLocaleTimeString()}
-    </p>
-  )
+  return <span>{time}</span>
 }
